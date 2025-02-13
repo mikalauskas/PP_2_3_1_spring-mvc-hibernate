@@ -18,11 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
-
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import java.io.IOException;
 import java.util.Properties;
 
 @Configuration
@@ -41,14 +37,12 @@ public class WebConfig implements WebMvcConfigurer {
         this.applicationContext = applicationContext;
     }
 
-
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws IOException {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setPackagesToScan("web");
         factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
-        // Load properties
         Properties properties = new Properties();
         properties.put("javax.persistence.jdbc.driver", env.getProperty("javax.persistence.jdbc.driver"));
         properties.put("javax.persistence.jdbc.url", env.getProperty("javax.persistence.jdbc.url"));
@@ -56,7 +50,6 @@ public class WebConfig implements WebMvcConfigurer {
         properties.put("javax.persistence.jdbc.password", env.getProperty("javax.persistence.jdbc.password"));
         properties.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
         properties.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
-//        properties.load(getClass().getClassLoader().getResourceAsStream("db.properties"));
         factoryBean.setJpaProperties(properties);
 
         return factoryBean;
